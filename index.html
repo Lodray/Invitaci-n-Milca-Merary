@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invitación - Merary 5 años</title>
+  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ice-1:#eaf8ff; --ice-2:#dff4ff; --accent:#5aa9df; --accent-2:#9bd2f5; --text:#083249; --card-bg:rgba(255,255,255,0.96); --shadow:0 18px 40px rgba(6,30,44,0.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Nunito,system-ui,Arial;background:linear-gradient(180deg,var(--ice-1),var(--ice-2));color:var(--text);}
+
+    /* PRELOADER */
+    .preloader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,var(--ice-1));z-index:10030}
+    .spinner{width:72px;height:72px;border-radius:50%;border:6px solid rgba(90,169,223,0.12);border-top-color:var(--accent);animation:spin 1100ms linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader-text{margin-top:12px;font-weight:700;color:var(--accent)}
+
+    /* SEAL OVERLAY - ensure it fully covers invitation and blocks interaction */
+    .seal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,1),rgba(245,255,255,1));z-index:10020}
+    .seal-center{display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer}
+    .seal-bubble{background:#fff;padding:10px 16px;border-radius:999px;box-shadow:0 12px 30px rgba(10,20,30,0.12);font-weight:700}
+    .seal-img{width:140px;height:140px;border-radius:50%;background:radial-gradient(circle at 30% 20%, #cfeffb 0%, #8cc6e8 45%, #4da3d6 100%);box-shadow:0 18px 44px rgba(0,0,0,0.14);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:34px;position:relative}
+    .seal-img::before{content:'';position:absolute;inset:-22%;border-radius:inherit;background:conic-gradient(from 0deg, rgba(154,210,245,0.22), rgba(90,169,223,0.22), rgba(200,240,255,0.12));filter:blur(10px);animation:rotateGlow 8s linear infinite}
+    @keyframes rotateGlow{to{transform:rotate(360deg)}}
+    .seal-msg{position:absolute;top:-44px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.98);padding:8px 12px;border-radius:999px;box-shadow:0 8px 20px rgba(0,0,0,0.12);font-weight:700}
+
+    /* MUSIC CONTROL */
+    .music-toggle{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:10021;background:#003b57;color:#fff;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    #audioFile{display:none}
+
+    /* MAIN scroller (this is the page scroller) */
+    .scroller{position:fixed;inset:0;overflow:auto;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;z-index:0}
+    .section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+    /* HERO */
+    .hero{position:relative;width:100%;height:100vh;background-size:cover;background-position:center;color:#fff;display:flex;align-items:center;justify-content:center}
+    .hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(3,18,28,0.46), rgba(3,18,28,0.12));}
+    .hero-inner{position:relative;z-index:2;text-align:center;width:100%;max-width:1000px;padding:56px}
+    .title{font-family:'Marck Script',cursive;font-size:84px;letter-spacing:2px;margin:0;text-shadow:0 8px 26px rgba(0,0,0,0.5)}
+    .subtitle{margin-top:8px;font-size:18px;opacity:0.95}
+    .hero-ctas{margin-top:18px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{background:var(--accent);color:#fff;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:700}
+
+    /* TIMELINE vertical integrated with page flow (no internal scroll container) */
+    .timeline{width:100%;padding:36px 18px;background:linear-gradient(180deg,var(--ice-2),#f8fdff);display:flex;justify-content:center}
+    .timeline-wrap{width:100%;max-width:1000px;padding:28px}
+    .timeline-list{display:block}
+
+    /* decorative center line that spans the whole timeline content - will scroll with the page */
+    .line{position:absolute;left:50%;transform:translateX(-50%);width:4px;background:linear-gradient(180deg,var(--accent),var(--accent-2));top:0;bottom:0;border-radius:4px;z-index:0}
+
+    .entry{position:relative;display:flex;gap:18px;align-items:center;padding:18px;background:rgba(255,255,255,0.96);border-radius:12px;margin:36px 0;box-shadow:0 8px 20px rgba(6,30,44,0.06);z-index:2}
+    .entry .dot{position:absolute;left:calc(50% - 12px);width:24px;height:24px;border-radius:50%;background:var(--accent);transform:translateY(-6px);box-shadow:0 10px 22px rgba(90,169,223,0.18);z-index:3}
+
+    /* layout inside each entry: wide screens show text left and photo right; mobile stacks photo then text to favor phones */
+    .entry .content{flex:1;display:flex;flex-direction:row;gap:12px;align-items:center}
+    .entry .text{flex:1}
+    .entry .text h4{margin:0 0 6px 0}
+    .entry .photo{width:40%;min-width:160px;height:160px;border-radius:10px;background-size:cover;background-position:center}
+
+    @media (max-width:720px){
+      .entry{flex-direction:column;align-items:stretch}
+      .entry .content{flex-direction:column}
+      .entry .photo{width:100%;height:220px}
+      .line{left:20px;transform:none;width:4px}
+      .entry .dot{left:8px;transform:none}
+    }
+
+    .footer{padding-top:12px;text-align:center;color:#123}
+
+  </style>
+</head>
+<body>
+
+  <!-- PRELOADER -->
+  <div class="preloader" id="preloader">
+    <div style="text-align:center">
+      <div class="spinner" aria-hidden></div>
+      <div class="loader-text">Cargando invitación…</div>
+    </div>
+  </div>
+
+  <!-- SEAL overlay (hidden until preloader done). This overlay has high z-index and blocks everything underneath -->
+  <div class="seal-overlay" id="sealWrap" style="display:none;" role="button" aria-label="Abrir invitación">
+    <div class="seal-center" id="seal" tabindex="0">
+      <div class="seal-msg">¡Haz clic aquí!</div>
+      <div class="seal-img">❄</div>
+      <div class="seal-bubble">Abrir invitación</div>
+    </div>
+  </div>
+
+  <!-- music control -->
+  <div class="music-toggle" id="musicToggle" title="Música (clic para reproducir/pausar)">🔊</div>
+  <input id="audioFile" type="file" accept="audio/*">
+  <audio id="bgMusic" loop preload="auto"></audio>
+
+  <!-- MAIN content (scroller) - hidden from view until seal is clicked using visibility so overlay cannot be bypassed -->
+  <div class="scroller" id="scroller" aria-hidden="true" style="visibility:hidden">
+
+    <!-- HERO -->
+    <section class="section hero" id="hero" style="background-image:url('/mnt/data/73043d4e-3837-4242-8451-ec5438fc97b8.png')">
+      <div class="hero-inner">
+        <h1 class="title" id="heroName">Merary</h1>
+        <div class="subtitle" id="heroSubtitle">Te Invito a mi Cumpleaños — 29 de noviembre, 2025 • En mi casa</div>
+        <div class="hero-ctas">
+          <a class="btn" id="jumpTimeline" href="#timeline">Momentos Inolvidables</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE vertical integrated with page flow -->
+    <section class="section timeline" id="timeline">
+      <div class="timeline-wrap">
+        <div style="position:relative">
+          <div class="line" aria-hidden></div>
+          <div class="timeline-list" id="timelineList">
+            <!-- entries will be injected here and will expand the page vertically, scrolling with the page -->
+          </div>
+        </div>
+        <div class="footer">Esperamos contar contigo en este día tan especial. ¡No faltes! ❤️
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    /* ========== ASSETS (ajusta las rutas a tu carpeta assets) ========== */
+    const ASSETS = {
+      bg: 'assets/fondo.png',
+      photos: [
+        'assets/0.png',
+        'assets/1.png',
+        'assets/2.png',
+        'assets/3.png',
+        'assets/4.png',
+        'assets/5.png'
+      ],
+      music: ''
+    };
+
+    /* ========== DATA: texto y dirección ========== */
+    const DATA = {
+      name: 'Merary Mejia',
+      age: 5,
+      dateISO: '2025-11-29T18:00:00',
+      address: 'Calle Clavelinas, Colonia La Florida, Chilpancingo, Guerrero,',
+      events:[
+        {title:'Llegue a este mundo', date:'2020', desc:'La primera vez que llegue, recuerdo que mi familia venia mucho a verme', photoIndex:0},
+        {title:'Siempre fui alguien muy alegre', date:'2021', desc:'Siempre fui alguien muy alegre desde que mis primeros años.', photoIndex:1},
+        {title:'Conoci el mar por primera vez', date:'2022', desc:'Fiesta con tema de princesas.', photoIndex:2},
+        {title:'Me gusto jugar con la arena', date:'2022', desc:'Reunión en jardín con juegos.', photoIndex:3},
+        {title:'Empecé mi vida escolar con muchas aventuras', date:'2024', desc:'Celebración con amigos y familia.', photoIndex:4},
+        {title:'Esta vez quiero invitarte', date:'2025', desc:'Fiesta temática de Frozen.', photoIndex:5},
+      ]
+    };
+
+    // apply hero background & texts
+    document.getElementById('hero').style.backgroundImage = `url('${ASSETS.bg}')`;
+    document.getElementById('heroName').textContent = DATA.name;
+    document.getElementById('heroSubtitle').textContent = `Cumple ${DATA.age} años — ${new Date(DATA.dateISO).toLocaleDateString('es-ES')} • ${DATA.address}`;
+
+    // populate timeline entries (these will be part of page flow and scroll with it)
+    const list = document.getElementById('timelineList');
+    DATA.events.forEach((e,i)=>{
+      const entry = document.createElement('div'); entry.className='entry';
+      const photoUrl = (ASSETS.photos && ASSETS.photos[e.photoIndex]) ? ASSETS.photos[e.photoIndex] : '';
+      entry.innerHTML = `
+        <div class="dot" aria-hidden></div>
+        <div class="content">
+          <div class="text">
+            <h4>${e.title} — ${e.date}</h4>
+            <p>${e.desc}</p>
+            ${i === DATA.events.length-1 ? `<p><strong>Dirección:</strong> ${DATA.address}</p><p><a href="#" id="openMaps">Cómo llegar (Maps)</a></p>` : ''}
+          </div>
+          <div class="photo" style="background-image:url('${photoUrl}')" aria-hidden></div>
+        </div>
+      `;
+      list.appendChild(entry);
+    });
+
+    // MAPS link builder
+    function mapsLinkFromAddress(addr){ return 'https://maps.app.goo.gl/KkHcGmJWRQiNEoDL6' + encodeURIComponent(addr); }
+    document.addEventListener('click', (ev)=>{
+      if(ev.target && ev.target.id === 'openMaps'){
+        ev.preventDefault(); const mapUrl = mapsLinkFromAddress(DATA.address); window.open(mapUrl,'_blank');
+      }
+    });
+
+    /* MUSIC setup */
+    const audio = document.getElementById('bgMusic'); const musicToggle = document.getElementById('musicToggle'); const audioFile = document.getElementById('audioFile');
+    if(ASSETS.music) audio.src = ASSETS.music; // preconfigure if path given
+    musicToggle.addEventListener('click', ()=>{ if(!audio.src){ audioFile.click(); return } if(audio.paused){ audio.play(); musicToggle.textContent='🔈'; } else { audio.pause(); musicToggle.textContent='🔊'; } });
+    audioFile.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; audio.src = URL.createObjectURL(f); audio.play(); musicToggle.textContent='🔈'; });
+
+    /* PRELOADER: wait for images to load then show seal (scroller remains hidden until user opens it) */
+    const preloader = document.getElementById('preloader'); const sealWrap = document.getElementById('sealWrap'); const scroller = document.getElementById('scroller');
+    function showSeal(){ preloader.style.display='none'; sealWrap.style.display='flex'; scroller.style.visibility='hidden'; }
+    const imgs = [ASSETS.bg, ...ASSETS.photos].filter(Boolean);
+    if(imgs.length===0) setTimeout(showSeal,300);
+    else {
+      let c=0; imgs.forEach(src=>{ const im=new Image(); im.src=src; im.onload=im.onerror=()=>{ c++; if(c>=imgs.length) setTimeout(showSeal,220); }; });
+      setTimeout(()=>{ if(preloader.style.display!=='none') showSeal(); },2000);
+    }
+
+    /* OPEN invite: clicking seal hides overlay and reveals scroller (so it cannot be seen before click) and starts music */
+    const seal = document.getElementById('seal');
+    function openInvite(){
+      sealWrap.animate([{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(0.95) translateY(-8px)'}],{duration:420,fill:'forwards',easing:'cubic-bezier(.2,.9,.2,1)'});
+      setTimeout(()=>{ sealWrap.style.display='none'; scroller.setAttribute('aria-hidden','false'); scroller.style.visibility='visible'; },420);
+      setTimeout(()=>document.getElementById('hero').scrollIntoView({behavior:'smooth'}),180);
+      // start music (user gesture satisfied)
+      if(audio.src){ audio.play().then(()=>musicToggle.textContent='🔈').catch(()=>{/* blocked */}); }
+    }
+    seal.addEventListener('click', openInvite); seal.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') openInvite(); });
+
+    // reveal entry animation when scrolling
+    const entries = Array.from(document.querySelectorAll('.entry'));
+    entries.forEach(el=>{ el.style.opacity=0; el.style.transform='translateY(10px)'; el.style.transition='opacity 600ms ease, transform 600ms ease'; });
+    const tlObserver = new IntersectionObserver((items)=>{ items.forEach((it)=>{ if(it.isIntersecting){ it.target.style.opacity=1; it.target.style.transform='translateY(0)'; } }); },{threshold:0.18});
+    entries.forEach(e=>tlObserver.observe(e));
+
+    // jump to timeline link
+    document.getElementById('jumpTimeline').addEventListener('click', e=>{ e.preventDefault(); document.getElementById('timeline').scrollIntoView({behavior:'smooth'}); });
+
+    /* USAGE NOTES:
+      - Para apuntar a tu carpeta assets: cambia ASSETS.bg, ASSETS.photos (5 rutas) y ASSETS.music.
+      - La burbuja ahora cubre todo y evita ver la invitación hasta que se haga click.
+      - La línea del tiempo es parte del documento principal y se mueve con la página al hacer scroll.
+    */
+  </script>
+</body>
+</html>
