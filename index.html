@@ -147,7 +147,7 @@
       name: 'Merary Mejia',
       age: 5,
       dateISO: '2025-11-29T18:00:00',
-      address: 'Calle Clavelinas, Colonia La Florida, Chilpancingo, Guerrero,',
+      address: 'Calle Clavelinas, Colonia La Florida, Chilpancingo,39073, Guerrero,',
       events:[
         {title:'Llegue a este mundo', date:'2020', desc:'La primera vez que llegue, recuerdo que mi familia venia mucho a verme', photoIndex:0},
         {title:'Siempre fui alguien muy alegre', date:'2021', desc:'Siempre fui alguien muy alegre desde que mis primeros años.', photoIndex:1},
@@ -174,20 +174,12 @@
           <div class="text">
             <h4>${e.title} — ${e.date}</h4>
             <p>${e.desc}</p>
-            ${i === DATA.events.length-1 ? `<p><strong>Dirección:</strong> ${DATA.address}</p><p><a href="#" id="openMaps">Cómo llegar (Maps)</a></p>` : ''}
+            ${i === DATA.events.length-1 ? `<p><strong>Dirección:</strong> ${DATA.address}</p>` : ''}
           </div>
           <div class="photo" style="background-image:url('${photoUrl}')" aria-hidden></div>
         </div>
       `;
       list.appendChild(entry);
-    });
-
-    // MAPS link builder
-    function mapsLinkFromAddress(addr){ return 'https://maps.app.goo.gl/KkHcGmJWRQiNEoDL6' + encodeURIComponent(addr); }
-    document.addEventListener('click', (ev)=>{
-      if(ev.target && ev.target.id === 'openMaps'){
-        ev.preventDefault(); const mapUrl = mapsLinkFromAddress(DATA.address); window.open(mapUrl,'_blank');
-      }
     });
 
     /* MUSIC setup */
@@ -235,4 +227,5 @@
 </body>
 
 </html>
+
 
